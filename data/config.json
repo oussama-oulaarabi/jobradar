@@ -1,0 +1,160 @@
+{
+  "categories": [
+    {
+      "id": "devops",
+      "name": "DevOps & Infrastructures",
+      "keywords": [
+        "DevOps",
+        "Kubernetes",
+        "Docker",
+        "CI/CD",
+        "Jenkins",
+        "Ansible",
+        "Terraform",
+        "GitHub",
+        "GitLab",
+        "Jira"
+      ]
+    },
+    {
+      "id": "cloud",
+      "name": "Cloud Computing (AWS / Azure)",
+      "keywords": [
+        "AWS",
+        "Azure",
+        "Cloud Engineer",
+        "Cloud Architect",
+        "EC2",
+        "S3",
+        "EKS",
+        "AKS"
+      ]
+    },
+    {
+      "id": "mlops",
+      "name": "MLOps & Orchestration",
+      "keywords": [
+        "MLOps",
+        "GitOps",
+        "Airflow",
+        "MLflow",
+        "Kubeflow",
+        "ArgoCD",
+        "DVC"
+      ]
+    },
+    {
+      "id": "databases-dw",
+      "name": "Bases de Données & Data Warehouse",
+      "keywords": [
+        "MySQL",
+        "HBase",
+        "Elasticsearch",
+        "Snowflake",
+        "BigQuery",
+        "Data Warehouse",
+        "ClickHouse"
+      ]
+    },
+    {
+      "id": "observability",
+      "name": "Observabilité & Métriques",
+      "keywords": [
+        "ELK",
+        "Elasticsearch",
+        "Logstash",
+        "Kibana",
+        "Grafana",
+        "Prometheus",
+        "Observability",
+        "APM"
+      ]
+    },
+    {
+      "id": "bigdata",
+      "name": "Big Data & Data Engineering",
+      "keywords": [
+        "Big Data",
+        "Spark",
+        "Hadoop",
+        "Kafka",
+        "Scala",
+        "Databricks",
+        "Data Engineer"
+      ]
+    },
+    {
+      "id": "java-spring",
+      "name": "Java & Spring Ecosystem",
+      "keywords": [
+        "Java",
+        "Spring Boot",
+        "Spring Cloud",
+        "Hibernate",
+        "Microservices"
+      ]
+    },
+    {
+      "id": "frontend",
+      "name": "Frontend Modern (React)",
+      "keywords": [
+        "React",
+        "Next.js",
+        "Vite",
+        "TypeScript",
+        "Tailwind",
+        "Frontend"
+      ]
+    }
+  ],
+  "countries": [
+    {
+      "code": "ma",
+      "name": "Maroc",
+      "enabled": true
+    },
+    {
+      "code": "fr",
+      "name": "France",
+      "enabled": true
+    },
+    {
+      "code": "ca",
+      "name": "Canada",
+      "enabled": true
+    }
+  ],
+  "sources": [
+    {
+      "id": "jooble",
+      "name": "Jooble API",
+      "enabled": true
+    },
+    {
+      "id": "adzuna",
+      "name": "Adzuna API",
+      "enabled": true
+    },
+    {
+      "id": "linkedin",
+      "name": "LinkedIn Public",
+      "enabled": true
+    },
+    {
+      "id": "indeed",
+      "name": "Indeed Public",
+      "enabled": true
+    },
+    {
+      "id": "rekrute",
+      "name": "Rekrute (Maroc)",
+      "enabled": true
+    }
+  ],
+  "telegram": {
+    "enabled": true,
+    "botToken": "",
+    "chatId": ""
+  },
+  "cron": "0 18 * * *"
+}
