@@ -116,12 +116,12 @@
     {
       "code": "fr",
       "name": "France",
-      "enabled": true
+      "enabled": false
     },
     {
       "code": "ca",
       "name": "Canada",
-      "enabled": true
+      "enabled": false
     }
   ],
   "sources": [
