@@ -76,8 +76,8 @@ export class DbManager {
         ],
         countries: [
           { code: 'ma', name: 'Maroc', enabled: true },
-          { code: 'fr', name: 'France', enabled: true },
-          { code: 'ca', name: 'Canada', enabled: true }
+          { code: 'fr', name: 'France', enabled: false },
+          { code: 'ca', name: 'Canada', enabled: false }
         ],
         sources: [
           { id: 'jobspy', name: 'JobSpy Engine (LinkedIn, Indeed, Glassdoor, ZipRecruiter)', enabled: true },
