@@ -138,22 +138,22 @@
     {
       "id": "jooble",
       "name": "Jooble API",
-      "enabled": false
+      "enabled": true
     },
     {
       "id": "adzuna",
       "name": "Adzuna API",
-      "enabled": false
+      "enabled": true
     },
     {
       "id": "linkedin",
       "name": "LinkedIn (Legacy Scraper)",
-      "enabled": false
+      "enabled": true
     },
     {
       "id": "indeed",
       "name": "Indeed (Legacy Scraper)",
-      "enabled": false
+      "enabled": true
     }
   ],
   "telegram": {
