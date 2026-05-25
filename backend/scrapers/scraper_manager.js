@@ -5,6 +5,13 @@ import { scrapeIndeed } from './indeed_scraper.js';
 import { scrapeRekrute } from './rekrute_scraper.js';
 import { scrapeMockJobs } from './mock_scraper.js';
 import { scrapeRssFeed } from './rss_scraper.js';
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Coordinate and run all scrapers based on user configuration
@@ -20,6 +27,32 @@ export async function runAllScrapers(config, logCallback = console.log) {
   if (activeCountries.length === 0) {
     logCallback('⚠️ No countries enabled in configuration. Aborting search.');
     return [];
+  }
+
+  // 1. A. Run JobSpy Python Engine if active (to aggregate LinkedIn, Indeed, Glassdoor, ZipRecruiter)
+  if (activeSources.some(s => s.id === 'jobspy')) {
+    logCallback('🐍 Executing python-jobspy Scraper Engine (LinkedIn + Indeed + Glassdoor + ZipRecruiter)...');
+    try {
+      const pythonScript = path.resolve(__dirname, '../scripts/jobspy_scraper.py');
+      // Run the python script
+      execSync(`python "${pythonScript}"`, { stdio: 'inherit' });
+      
+      // Read the output JSON file
+      const resultsPath = path.resolve(__dirname, '../jobspy_results.json');
+      if (fs.existsSync(resultsPath)) {
+        const data = fs.readFileSync(resultsPath, 'utf-8');
+        const jobs = JSON.parse(data);
+        logCallback(`✅ python-jobspy completed successfully! Loaded ${jobs.length} jobs.`);
+        allScrapedJobs.push(...jobs);
+        
+        // Clean up temporary results file
+        try {
+          fs.unlinkSync(resultsPath);
+        } catch (e) {}
+      }
+    } catch (e) {
+      logCallback(`❌ python-jobspy scraper execution failed: ${e.message}`);
+    }
   }
 
   // 1. Check if we should use Mock Scraper

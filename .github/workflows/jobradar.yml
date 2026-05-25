@@ -24,6 +24,16 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'backend/package.json'
 
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install python-jobspy
+
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: npm install
@@ -31,8 +41,8 @@ jobs:
       - name: Run JobRadar Daily Search & Scrapers
         working-directory: ./backend
         env:
-          process.env.GITHUB_ACTIONS: 'true'
-          process.env.SERVERLESS: 'true'
+          GITHUB_ACTIONS: 'true'
+          SERVERLESS: 'true'
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           JOOBLE_API_KEY: ${{ secrets.JOOBLE_API_KEY }}

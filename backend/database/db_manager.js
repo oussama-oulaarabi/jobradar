@@ -80,11 +80,12 @@ export class DbManager {
           { code: 'ca', name: 'Canada', enabled: true }
         ],
         sources: [
-          { id: 'jooble', name: 'Jooble API', enabled: true },
-          { id: 'adzuna', name: 'Adzuna API', enabled: true },
-          { id: 'linkedin', name: 'LinkedIn Public', enabled: true },
-          { id: 'indeed', name: 'Indeed Public', enabled: true },
-          { id: 'rekrute', name: 'Rekrute (Maroc)', enabled: true }
+          { id: 'jobspy', name: 'JobSpy Engine (LinkedIn, Indeed, Glassdoor, ZipRecruiter)', enabled: true },
+          { id: 'rekrute', name: 'Rekrute (Maroc)', enabled: true },
+          { id: 'jooble', name: 'Jooble API', enabled: false },
+          { id: 'adzuna', name: 'Adzuna API', enabled: false },
+          { id: 'linkedin', name: 'LinkedIn (Legacy Scraper)', enabled: false },
+          { id: 'indeed', name: 'Indeed (Legacy Scraper)', enabled: false }
         ],
         telegram: {
           enabled: true,
