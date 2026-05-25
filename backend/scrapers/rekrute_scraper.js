@@ -14,37 +14,65 @@ export async function scrapeRekrute(keywords, countryCode, categoryId) {
 
   for (const keyword of keywords) {
     try {
-      // Rekrute search page
-      const searchUrl = `https://www.rekrute.com/offres-emploi.html?keyword=${encodeURIComponent(keyword)}&st=p`;
+      // Rekrute search page uses offres.html with keyWords parameter
+      const searchUrl = `https://www.rekrute.com/offres.html?keyWords=${encodeURIComponent(keyword)}&st=p`;
       
       const response = await axios.get(searchUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept-Language': 'fr-FR,fr;q=0.9'
+          'Accept-Language': 'fr-FR,fr;q=0.9',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
         },
         timeout: 10000
       });
 
       const html = response.data;
       
-      // Parse Rekrute items using HTML regex
-      const postRegex = /<li class="post-item[\s\S]*?<\/li>/g;
+      // Parse Rekrute items using the correct 'post-id' class container
+      const postRegex = /<li class="post-id"[\s\S]*?<\/li>/g;
       const posts = html.match(postRegex) || [];
 
       if (posts.length > 0) {
         console.log(`✅ Rekrute: Found ${posts.length} HTML offers for "${keyword}"`);
         
         for (const post of posts) {
-          const titleMatch = post.match(/<a class="titreJob"[\s\S]*?>([\s\S]*?)<\/a>/);
-          const companyMatch = post.match(/<img class="logoCompany"[\s\S]*?alt="([\s\S]*?)"/) || post.match(/<a class="companyName"[\s\S]*?>([\s\S]*?)<\/a>/);
-          const locationMatch = post.match(/<span class="location">([\s\S]*?)<\/span>/) || post.match(/📍\s*([^<\n]+)/);
-          const linkMatch = post.match(/<a class="titreJob"[\s\S]*?href="([\s\S]*?)"/);
+          // Robust attribute-order-independent regexes
+          const titleMatch = post.match(/<a[^>]*class=['"]titreJob['"][^>]*>([\s\S]*?)<\/a>/i);
+          const linkMatch = post.match(/<a[^>]*class=['"]titreJob['"][^>]*href=['"]([^'"]+)['"]/i) || 
+                            post.match(/<a[^>]*href=['"]([^'"]+)['"][^>]*class=['"]titreJob['"]/i);
+          const companyMatch = post.match(/<img[^>]*class=['"]photo['"][^>]*alt=['"]([^'"]+)['"]/i) || 
+                               post.match(/<img[^>]*alt=['"]([^'"]+)['"][^>]*class=['"]photo['"]/i) ||
+                               post.match(/alt=['"]([^'"]+)['"]\s+title=/i) ||
+                               post.match(/<a class=['"]companyName['"][\s\S]*?>([\s\S]*?)<\/a>/i);
+          const descMatch = post.match(/<span style="color: #5b5b5b;line-height: 18px;">([\s\S]*?)<\/span>/i) ||
+                            post.match(/<div class="info"[\s\S]*?>([\s\S]*?)<\/div>/i);
 
           if (titleMatch && linkMatch) {
-            const title = titleMatch[1].trim();
-            const company = companyMatch ? companyMatch[1].trim() : 'Recruteur Anonyme';
-            const location = locationMatch ? locationMatch[1].trim() : 'Casablanca';
-            const url = linkMatch[1].startsWith('http') ? linkMatch[1] : `https://www.rekrute.com${linkMatch[1]}`;
+            const rawTitle = titleMatch[1].replace(/\s+/g, ' ').trim();
+            const rawUrl = linkMatch[1].trim();
+            const url = rawUrl.startsWith('http') ? rawUrl : `https://www.rekrute.com${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
+            
+            let company = 'Recruteur Anonyme';
+            if (companyMatch) {
+              company = companyMatch[1].replace(/\s+/g, ' ').trim();
+            }
+
+            let location = 'Maroc';
+            let title = rawTitle;
+            // Split title and location if formatted as "Job | City (Maroc)"
+            if (rawTitle.includes('|')) {
+              const parts = rawTitle.split('|');
+              title = parts[0].trim();
+              location = parts[1].trim();
+            }
+
+            let description = descMatch 
+              ? descMatch[1].replace(/<\/?[^>]+(>|$)/g, "").replace(/\s+/g, ' ').trim()
+              : '';
+
+            if (!description) {
+              description = `Offre d'emploi informatique ${title} chez ${company} sur Rekrute. Visitez le site pour postuler et voir les exigences de compétences !`;
+            }
 
             jobs.push({
               title,
@@ -53,7 +81,7 @@ export async function scrapeRekrute(keywords, countryCode, categoryId) {
               country: 'ma',
               source: 'rekrute',
               url,
-              description: `Offre d'emploi informatique ${title} sur Rekrute. Visitez le site pour postuler et voir les exigences de compétences !`,
+              description,
               category: categoryId,
               postedDate: new Date().toISOString().split('T')[0]
             });
@@ -70,7 +98,7 @@ export async function scrapeRekrute(keywords, countryCode, categoryId) {
 }
 
 function generateRekruteFallback(keyword, category) {
-  const searchUrl = `https://www.rekrute.com/offres-emploi.html?keyword=${encodeURIComponent(keyword)}&st=p`;
+  const searchUrl = `https://www.rekrute.com/offres.html?keyWords=${encodeURIComponent(keyword)}&st=p`;
 
   return [
     {
