@@ -70,21 +70,17 @@ export async function scrapeRekrute(keywords, countryCode, categoryId) {
 }
 
 function generateRekruteFallback(keyword, category) {
-  const cities = ['Casablanca', 'Rabat', 'Tanger (Free Zone)', 'Technopolis Salé'];
-  const companies = ['HPS', 'OCP Group', 'M2M Group', 'LafargeHolcim Maroc', 'Intelcia Group', 'Inwi'];
-  
-  const company = companies[Math.floor(Math.random() * companies.length)];
-  const location = cities[Math.floor(Math.random() * cities.length)];
+  const searchUrl = `https://www.rekrute.com/offres-emploi.html?keyword=${encodeURIComponent(keyword)}&st=p`;
 
   return [
     {
-      title: `${keyword} (Rekrute Maroc)`,
-      company: company,
-      location: location,
+      title: `Consulter les nouvelles offres [${keyword}] réelles sur Rekrute Maroc`,
+      company: `Rekrute Maroc`,
+      location: `Maroc`,
       country: 'ma',
       source: 'rekrute',
-      url: `https://www.rekrute.com/offre-emploi-mock-${Math.floor(Math.random() * 10000)}.html`,
-      description: `Nous recherchons un profil qualifié ${keyword} pour l'un de nos projets majeurs au Maroc. Vous rejoindrez un environnement agile avec de fortes perspectives d'évolution. CDI avec mutuelle et avantages sociaux.`,
+      url: searchUrl,
+      description: `Le scraping direct de Rekrute a été ralenti par des mesures de protection.\n\n👉 Cliquez sur ce lien pour accéder en temps réel à 100% de la liste complète des offres actives pour ${keyword} sur Rekrute Maroc !`,
       category: category,
       postedDate: new Date().toISOString().split('T')[0]
     }

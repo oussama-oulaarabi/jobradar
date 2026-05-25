@@ -85,19 +85,22 @@ export async function scrapeIndeed(keywords, countryCode, categoryId) {
 }
 
 function generateIndeedFallback(keyword, country, category) {
-  const flags = { ma: 'Casablanca', fr: 'Paris', ca: 'Montréal' };
-  const mockCompanies = ['Viseo', 'Cognizant', 'LogiGroup', 'e-Diali', 'Alten'];
-  const company = mockCompanies[Math.floor(Math.random() * mockCompanies.length)];
+  const flags = { ma: 'ma.indeed.com', fr: 'fr.indeed.com', ca: 'ca.indeed.com' };
+  const domain = flags[country] || 'fr.indeed.com';
+  const geoName = country === 'ma' ? 'Maroc' : country === 'fr' ? 'France' : 'Canada';
+  
+  // Real working search URL
+  const searchUrl = `https://${domain}/jobs?q=${encodeURIComponent(keyword)}&l=`;
 
   return [
     {
-      title: `Ingénieur ${keyword} (Indeed)`,
-      company: company,
-      location: flags[country] || 'Remote',
+      title: `Consulter les nouvelles offres [${keyword}] réelles sur Indeed`,
+      company: `Indeed ${geoName}`,
+      location: geoName,
       country: country,
       source: 'indeed',
-      url: `https://www.indeed.com/viewjob?jk=indeed-jk-${Math.floor(Math.random() * 900000)}`,
-      description: `Rejoignez notre équipe en tant qu'Ingénieur ${keyword}. Vous serez en charge de l'intégration, du support opérationnel et du développement technique. Rémunération attractive selon profil.`,
+      url: searchUrl,
+      description: `Le scraping direct d'Indeed a été ralenti par Cloudflare sur GitHub Actions.\n\n👉 Cliquez sur ce lien pour accéder directement à la liste complète et en temps réel de 100% des offres réelles de ${keyword} sur Indeed ${geoName} !`,
       category: category,
       postedDate: new Date().toISOString().split('T')[0]
     }

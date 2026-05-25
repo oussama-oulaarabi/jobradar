@@ -83,19 +83,21 @@ export async function scrapeLinkedIn(keywords, countryCode, categoryId) {
 }
 
 function generateLinkedInFallback(keyword, country, category) {
-  const flags = { ma: 'Casablanca, Maroc', fr: 'Paris, France', ca: 'Montréal, Canada' };
-  const mockCompanies = ['AWS Partners', 'Scale IT', 'CloudOps Global', 'FinTech Corp', 'Capita Group'];
-  const company = mockCompanies[Math.floor(Math.random() * mockCompanies.length)];
+  const flags = { ma: 'Maroc', fr: 'France', ca: 'Canada' };
+  const geoName = flags[country] || 'France';
+  
+  // Real working search URL
+  const searchUrl = `https://www.linkedin.com/jobs/search?keywords=${encodeURIComponent(keyword)}&location=${encodeURIComponent(geoName)}`;
 
   return [
     {
-      title: `${keyword} Specialist (LinkedIn)`,
-      company: company,
-      location: flags[country] || 'Remote',
+      title: `Consulter les nouvelles offres [${keyword}] réelles sur LinkedIn`,
+      company: `LinkedIn ${geoName}`,
+      location: geoName,
       country: country,
       source: 'linkedin',
-      url: `https://www.linkedin.com/jobs/view/linkedin-job-${Math.floor(Math.random() * 100000)}`,
-      description: `Nous recherchons un(e) ${keyword} pour accompagner la croissance de notre pôle technologique. Profil recherché : autonomie, rigueur, maîtrise technique complète et esprit DevOps. Rejoignez une équipe passionnée !`,
+      url: searchUrl,
+      description: `Le scraping direct de LinkedIn a été limité par la sécurité anti-bot de GitHub Actions (Cloudflare).\n\n👉 Cliquez sur ce lien pour accéder directement à 100% des offres réelles et en temps réel de ${keyword} en ${geoName} sur LinkedIn !`,
       category: category,
       postedDate: new Date().toISOString().split('T')[0]
     }
